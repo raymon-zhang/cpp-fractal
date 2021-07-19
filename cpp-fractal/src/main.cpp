@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : cpp-fractal.cpp
+// Name        : main.cpp
 // Author      : 
 // Version     :
 // Copyright   : Your copyright notice
@@ -7,9 +7,15 @@
 //============================================================================
 
 #include <iostream>
+#include "Bitmap.h"
+
 using namespace std;
+using namespace rz;
 
 int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+	Bitmap bitmap(1280, 720);
+
+	bitmap.write("test.bmp");
+	cout << "Finished" << endl; // prints !!!Hello World!!!
 	return 0;
 }
