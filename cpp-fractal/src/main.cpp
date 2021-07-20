@@ -8,65 +8,33 @@
 
 #include <iostream>
 #include <memory>
+#include <utility>
 #include <math.h>
-#include "Bitmap.h"
+#include "FractalCreator.h"
+#include "Zoom.h"
 #include "Mandelbrot.h"
+#include "Julia.h"
+#include "Fractal.h"
 
 using namespace std;
 using namespace rz;
 
 int main() {
-	int const WIDTH = 1280, HEIGHT = 720;
-	Bitmap bitmap(WIDTH, HEIGHT);
 
-	unique_ptr<int[]> histogram(new int[Mandelbrot::MAX_ITERATIONS] { });
-	unique_ptr<int[]> fractal(new int[WIDTH * HEIGHT] { });
+	Julia julia(-0.8, 0.156);
+//	Mandelbrot mandelbrot;
+	FractalCreator fractalCreator(800, 600, 1000, julia);
 
-	for (int x = 0; x < WIDTH; x++) {
-		for (int y = 0; y < HEIGHT; y++) {
-			double xFractal = (x - WIDTH / 2 - 200) * 2.0 / HEIGHT;
-			double yFractal = (y - HEIGHT / 2) * 2.0 / HEIGHT;
+	fractalCreator.addRange(0.0, RGB(0, 0, 255));
+	fractalCreator.addRange(0.05, RGB(255, 99, 71));
+	fractalCreator.addRange(0.08, RGB(255, 215, 0));
+	fractalCreator.addRange(1.0, RGB(255, 255, 255));
 
-			int iterations = Mandelbrot::getIterations(xFractal, yFractal);
+	fractalCreator.addZoom(Zoom(400, 300, 0.5));
+//	fractalCreator.addZoom(Zoom(188, 268, 0.01));
+//	fractalCreator.addZoom(Zoom(312, 304, 0.1));
 
-			fractal[y * WIDTH + x] = iterations;
-
-			if (iterations != Mandelbrot::MAX_ITERATIONS) {
-				histogram[iterations]++;
-			}
-
-		}
-	}
-
-	int total = 0;
-	for (int i = 0; i < Mandelbrot::MAX_ITERATIONS; i++) {
-		total += histogram[i];
-	}
-
-	for (int x = 0; x < WIDTH; x++) {
-		for (int y = 0; y < HEIGHT; y++) {
-			uint8_t red = 0;
-			uint8_t green = 0;
-			uint8_t blue = 0;
-
-			int iterations = fractal[y * WIDTH + x];
-
-			if (iterations != Mandelbrot::MAX_ITERATIONS) {
-
-				double hue = 0.0;
-
-				for (int i = 0; i <= iterations; i++) {
-					hue += ((double) histogram[i]) / total;
-				}
-
-				green = pow(255, hue);
-			}
-
-			bitmap.setPixel(x, y, red, green, blue);
-		}
-	}
-
-	bitmap.write("test.bmp");
+	fractalCreator.run("test.bmp");
 
 	cout << "Finished" << endl; // prints !!!Hello World!!!
 	return 0;
