@@ -56,7 +56,13 @@ bool Bitmap::write(string filename) {
 }
 
 void Bitmap::setPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+	uint8_t *pixel = _pixels.get();
 
+	pixel += (y * 3) * _width + (x * 3);
+
+	pixel[0] = blue;
+	pixel[1] = green;
+	pixel[2] = red;
 }
 
 Bitmap::~Bitmap() {
