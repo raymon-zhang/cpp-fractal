@@ -12,7 +12,7 @@
 
 namespace rz {
 
-class Mandelbrot: public virtual Fractal {
+class Mandelbrot: public Fractal {
 public:
 	int getIterations(double x, double y, int maxIterations);
 };
